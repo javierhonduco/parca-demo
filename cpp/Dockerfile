@@ -1,17 +1,9 @@
-FROM debian:stable as builder
-RUN apt-get update && apt-get install build-essential -y
+FROM debian:stable
+RUN apt-get update && apt-get install build-essential bash -y
 
-ARG GCC_FLAGS
 
 WORKDIR /app
-
 COPY main.cpp .
+RUN g++ -g -fno-omit-frame-pointer -o parca-demo main.cpp && chmod +x /app/parca-demo
 
-RUN g++ ${GCC_FLAGS} -o parca-demo main.cpp
-
-FROM debian:stable-slim as runner
-RUN apt-get update && apt-get install libc6-dbg libstdc++6-10-dbg -y
-
-COPY --from=builder /app/parca-demo .
-
-CMD ["./parca-demo"]
+CMD ["/bin/bash", "-c", "/app/parca-demo"]

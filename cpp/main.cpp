@@ -1,27 +1,76 @@
 #include <iostream>
+#include <unistd.h>
+#include <fcntl.h>
 
-unsigned int fibonacci(unsigned int n)
+
+int __attribute__ ((noinline))  top()
 {
-    if (n == 0)
-        return 0;
+   for(int i=0; i<100000; i++) {
+      int fd = open("/", O_DIRECTORY);
+      close(fd);
 
-    unsigned int a = 1, b = 1;
-    for (unsigned int i = 3; i <= n; ++i)
-    {
-        unsigned int fib = a + b;
-        a = b;
-        b = fib;
-    }
-
-    return b;
+   }
+   return 1;
 }
+
+
+int __attribute__ ((noinline)) c1()
+{
+   return top();
+}
+
+int __attribute__ ((noinline))  b1()
+{
+   return c1();
+}
+
+
+int __attribute__ ((noinline))  a1()
+{
+   return b1();
+}
+
+int __attribute__ ((noinline)) c2()
+{
+   return top();
+}
+
+int __attribute__ ((noinline))  b2()
+{
+   return c2();
+}
+
+
+int __attribute__ ((noinline))  a2()
+{
+   return b2();
+}
+
+int __attribute__ ((noinline)) c3()
+{
+  sleep(1);
+   return 1;
+}
+
+int __attribute__ ((noinline))  b3()
+{
+   return c3();
+}
+
+
+int __attribute__ ((noinline))  a3()
+{
+   return b3();
+}
+
 
 int main()
 {
-    int limit = 1000000;
-    for (int i = 0; i < limit; i++)
-    {
-        std::cout << "F(" << i << ") = " << fibonacci(i) << std::endl;
+    while(true) {
+        std::cout << "Calling a" << std::endl;
+        a1();
+        a2();
+	a3();
     }
     return 0;
 }
